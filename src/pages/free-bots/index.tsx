@@ -93,6 +93,38 @@ const FREE_BOTS = [
         category: 'Even Odd' as BotCategory,
         difficulty: 'Advanced',
     },
+    {
+        id: 'frosty_speed_bot',
+        xml_file: 'frosty_speed_bot',
+        name: 'Frosty Speed Bot',
+        description: 'Fast even/odd digit trading with a "Daily Profit" management system for automatic trade repetition and profit tracking.',
+        category: 'Normal' as BotCategory,
+        difficulty: 'Intermediate',
+    },
+    {
+        id: 'frosty_dominator',
+        xml_file: 'frosty_dominator',
+        name: 'Frosty Dominator',
+        description: 'A digit over/under strategy with entry-point targeting, recovery-digit martingale, and take-profit/stop-loss controls.',
+        category: 'Normal' as BotCategory,
+        difficulty: 'Advanced',
+    },
+    {
+        id: 'frosty_version',
+        xml_file: 'frosty_version',
+        name: 'Frosty Version',
+        description: 'A digit over/under prediction strategy with martingale recovery and configurable profit and loss targets.',
+        category: 'Normal' as BotCategory,
+        difficulty: 'Intermediate',
+    },
+    {
+        id: 'frosty_version_v2',
+        xml_file: 'frosty_version_v2',
+        name: 'Frosty Version V2',
+        description: 'An updated digit over/under strategy variant with martingale recovery and configurable profit and loss targets.',
+        category: 'Normal' as BotCategory,
+        difficulty: 'Intermediate',
+    },
 ];
 
 const DIFFICULTY_COLORS: Record<string, string> = {
