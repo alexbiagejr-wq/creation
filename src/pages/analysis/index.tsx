@@ -439,7 +439,7 @@ const AnalysisTools = observer(() => {
             <div className='analysis__header'>
                 <div className='analysis__header-left'>
                     <h2 className='analysis__title'>
-                        <Localize i18n_default_text='Analysis Tools' />
+                        <Localize i18n_default_text='Risk Calculator' />
                     </h2>
                     <p className='analysis__subtitle'>
                         <Localize i18n_default_text='Study market patterns, track your performance, and plan your staking strategy.' />
