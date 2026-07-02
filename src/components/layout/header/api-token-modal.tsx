@@ -24,6 +24,7 @@ const validateDerivApiToken = (token: string, appId: string): Promise<{
         const server = isProduction() ? 'ws.derivws.com' : 'ws.derivws.com';
         const wsUrl = `wss://${server}/websockets/v3?app_id=${appId}`;
         let settled = false;
+        let didOpen = false;
 
         const ws = new WebSocket(wsUrl);
 
@@ -38,6 +39,7 @@ const validateDerivApiToken = (token: string, appId: string): Promise<{
         const timer = setTimeout(() => fail('Connection timed out. Please try again.'), 12000);
 
         ws.onopen = () => {
+            didOpen = true;
             ws.send(JSON.stringify({ authorize: token }));
         };
 
@@ -63,11 +65,24 @@ const validateDerivApiToken = (token: string, appId: string): Promise<{
             }
         };
 
-        ws.onerror = () => fail('WebSocket connection failed. Check your internet connection.');
+        ws.onerror = () => {
+            // Browsers withhold WebSocket error detail for security; the close
+            // event (fired right after) carries the actual code/reason, so we
+            // log it here for debugging and let onclose produce the user message.
+            console.error('[ApiTokenModal] WebSocket error while connecting to', wsUrl);
+        };
         ws.onclose = (ev) => {
             if (!settled) {
                 clearTimeout(timer);
-                fail(ev.reason || 'Connection closed unexpectedly');
+                console.error('[ApiTokenModal] WebSocket closed', { code: ev.code, reason: ev.reason, didOpen });
+                if (!didOpen) {
+                    // Connection never opened: almost always a network-level block
+                    // (ad blocker/extension, corporate firewall/proxy, VPN, or DNS
+                    // blocking ws.derivws.com) rather than a bad token.
+                    fail('Could not reach Deriv\'s servers. This is usually caused by a browser extension (ad blocker), firewall, or VPN blocking WebSocket connections to ws.derivws.com — try disabling extensions or switching networks.');
+                } else {
+                    fail(ev.reason || `Connection closed unexpectedly (code ${ev.code}).`);
+                }
             }
         };
     });
