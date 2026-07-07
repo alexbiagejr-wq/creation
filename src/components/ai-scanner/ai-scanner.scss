@@ -234,12 +234,70 @@
         }
     }
 
-    // ── Market / trade-type fields ───────────────────────────────────────────
+    // ── Section label ────────────────────────────────────────────────────────
+
+    &__section-label {
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-less-prominent, #64748b);
+        margin-bottom: 0.6rem;
+        margin-top: 0.2rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid var(--general-section-1, #2a3a52);
+    }
+
+    // ── Editable bot parameters (2×2 grid) ───────────────────────────────────
+
+    &__params {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem;
+        margin-bottom: 1.1rem;
+    }
+
+    &__param {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-less-prominent, #64748b);
+        }
+
+        input {
+            width: 100%;
+            padding: 0.55rem 0.8rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border: 1.5px solid var(--general-section-1, #334155);
+            border-radius: 0.6rem;
+            background: var(--general-section-1, #1e293b);
+            color: var(--text-prominent, #f1f5f9);
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.15s;
+
+            &:focus { border-color: #10b981; }
+
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button { opacity: 1; }
+
+            &:disabled { opacity: 0.45; cursor: not-allowed; }
+        }
+    }
+
+    // ── AI Scanner Results (read-only fields) ─────────────────────────────────
 
     &__fields {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.8rem;
+        gap: 0.7rem;
         margin-bottom: 1rem;
     }
 
@@ -249,7 +307,7 @@
         gap: 0.3rem;
 
         label {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -262,12 +320,20 @@
             background: var(--general-section-1, #1e293b);
             border: 1.5px solid var(--general-section-1, #334155);
             border-radius: 0.6rem;
-            font-size: 1.15rem;
-            color: var(--text-prominent, #f1f5f9);
+            font-size: 1.1rem;
+            color: var(--text-less-prominent, #64748b);
             font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            // Highlight when AI has filled in the value
+            &.ai-scanner-modal__field-value--ai {
+                color: #10b981;
+                border-color: rgba(16, 185, 129, 0.35);
+                background: rgba(16, 185, 129, 0.06);
+                font-weight: 700;
+            }
         }
     }
 
