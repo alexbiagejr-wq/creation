@@ -1,2 +1,3 @@
 - [Copy Trading architecture](copy-trading-arch.md) — service/store/page pattern; tokens memory-only, never logged in full.
 - [Tab system pattern](tab-system.md) — adding a tab requires 4 coordinated edits across constants, store, page, and main.tsx.
+- [Bulk purchase POC delivery](bulk-poc-delivery.md) — Deriv API routes initial subscription response only through Promise, not onMessage(); processPOCMessage() + duplicate guard fixes it.

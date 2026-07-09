@@ -197,21 +197,28 @@ export default Engine =>
 
                 // Explicitly subscribe to proposal_open_contract for each bought contract.
                 //
-                // The Deriv API does NOT honour subscribe:1 on direct parameter-based buy
-                // requests — that flag only works when buying from a proposal ID.  Without
-                // an explicit subscription here the global onMessage() listener in
-                // observeOpenContract never receives settlement data for bulk contracts,
-                // so broadcastContract / updateTotals / log(PROFIT|LOSS) are never called
-                // and the transaction list, journal, and statistics all remain empty.
+                // The Deriv API routes the initial subscription response ONLY through the
+                // Promise returned by send() — NOT through the global onMessage() stream —
+                // when the contract is already settled by the time we subscribe (common for
+                // fast 1-tick options on volatility indices).  Without a .then() handler the
+                // initial settled state is silently discarded, so broadcastContract /
+                // updateTotals are never called and transactions/stats remain empty.
                 //
-                // We fire these as plain send() calls (no retry wrapper) because:
-                //  - The API responds with the initial contract state, then streams updates.
-                //  - observeOpenContract's onMessage() subscription receives all messages.
-                //  - If a single subscription fails, loginAndGetBalance's recovery timeout
-                //    will re-request the contract state after 1.5 s as a fallback.
+                // processPOCMessage() contains a duplicate-guard (bulkSettledIds.has())
+                // so calling it from here AND from observeOpenContract's onMessage() stream
+                // (for contracts that come through both paths) is safe — updateTotals and
+                // contractStatus fire exactly once per settled contract.
                 this.bulkContractIds.forEach(contract_id => {
                     api_base.api
                         .send({ proposal_open_contract: 1, contract_id, subscribe: 1 })
+                        .then(response => {
+                            // Process the initial contract state returned by the subscription.
+                            // For already-settled contracts this may be the ONLY delivery path.
+                            const contract = response?.proposal_open_contract;
+                            if (contract) {
+                                this.processPOCMessage(contract);
+                            }
+                        })
                         .catch(err => {
                             console.warn('[BulkPurchase] POC subscription failed for', contract_id, err);
                         });
