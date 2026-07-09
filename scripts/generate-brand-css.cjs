@@ -213,7 +213,7 @@ const addPackageScript = () => {
     }
 
     if (!packageJson.scripts['generate:brand-css']) {
-        packageJson.scripts['generate:brand-css'] = 'node scripts/generate-brand-css.js';
+        packageJson.scripts['generate:brand-css'] = 'node scripts/generate-brand-css.cjs';
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2), 'utf8');
         console.log('✅ Added "generate:brand-css" script to package.json');
     }
